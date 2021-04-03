@@ -10,6 +10,7 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import learning_curve
+from sklearn.decomposition import PCA
 import time
 # define data filenames
 data_filenames = [
@@ -173,6 +174,8 @@ plt.show()
 
 # Neural Networks
 # Multi-Layer Perceptron Classifier
+# edit to try PCA
+
 mlp = MLPClassifier(hidden_layer_sizes=(8,8,8),max_iter=300)
 start = time.time()
 mlp.fit(x_train, y_train)  # train model
@@ -316,22 +319,23 @@ for i in knn_list:
 
 #########################################################
 ##########  NURAL NETWORK #################
-
+Xx_train = PCA(2).fit_transform(x_train, y_train)
 # mlp = MLPClassifier(hidden_layer_sizes=(8,8,8),max_iter=300)
+Xx_train = PCA(2).fit_transform(Xx_train, y_train)
 start = time.time()
-train_sizes, train_scores, test_scores = learning_curve(mlp, x_train, y_train, n_jobs=-1, cv=10,
+train_sizes, train_scores, test_scores = learning_curve(mlp, Xx_train, y_train, n_jobs=-1, cv=10,
                                                         train_sizes=np.linspace(.1, 1.0, 5),
                                                         verbose=0)
 stop = time.time()
 print(f" NN MLPClassifier: {stop - start}s")
-scores_train_times['NN MLPClassifier'] = {stop - start}
+scores_train_times['NN MLPClassifier_PCA'] = {stop - start}
 train_scores_mean = np.mean(train_scores, axis=1)
 train_scores_std = np.std(train_scores, axis=1)
 test_scores_mean = np.mean(test_scores, axis=1)
 test_scores_std = np.std(test_scores, axis=1)
 
 plt.figure()
-plt.title("Multi-Layer Perceptron Classifier")
+plt.title("Multi-Layer Perceptron Classifier PCA_2")
 plt.legend(loc="best")
 plt.xlabel("Training examples")
 plt.ylabel("Score")
@@ -354,7 +358,7 @@ plt.plot(train_sizes, test_scores_mean, 'o-', color="g", label="Cross-validation
 plt.ylim(-.1, 1.1)
 plt.show()
 
-
+exit()
 ##################################################
 ##########  boost #################
 start = time.time()
