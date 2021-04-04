@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
@@ -321,7 +322,8 @@ for i in knn_list:
 ##########  NURAL NETWORK #################
 Xx_train = PCA(2).fit_transform(x_train, y_train)
 # mlp = MLPClassifier(hidden_layer_sizes=(8,8,8),max_iter=300)
-Xx_train = PCA(2).fit_transform(Xx_train, y_train)
+clustering = KMeans(2)
+clustering.fit(Xx_train)
 start = time.time()
 train_sizes, train_scores, test_scores = learning_curve(mlp, Xx_train, y_train, n_jobs=-1, cv=10,
                                                         train_sizes=np.linspace(.1, 1.0, 5),
@@ -335,7 +337,7 @@ test_scores_mean = np.mean(test_scores, axis=1)
 test_scores_std = np.std(test_scores, axis=1)
 
 plt.figure()
-plt.title("Multi-Layer Perceptron Classifier PCA_2")
+plt.title("Multi-Layer Perceptron Classifier cluster_PCA_2")
 plt.legend(loc="best")
 plt.xlabel("Training examples")
 plt.ylabel("Score")
